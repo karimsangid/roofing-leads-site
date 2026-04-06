@@ -1,0 +1,1494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RoofRoof Roofing Solutions — Roofing Leads on Demand</title>
+  <meta name="description" content="Self-serve pay-per-lead marketplace for roofing contractors. Verified leads $40, booked appointments $75, live transfers $150. Select by state, county, or zip code. Delivered with call recordings.">
+  <meta name="keywords" content="roofing leads, buy roofing leads, roofing contractor leads, verified roofing leads, booked roofing appointments, live transfer roofing leads, roofroof, roofing lead generation">
+  <meta name="robots" content="index, follow">
+  <meta name="author" content="RoofRoof Roofing Solutions">
+  <link rel="canonical" href="https://roofroof.solutions/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="RoofRoof Roofing Solutions — Roofing Leads on Demand">
+  <meta property="og:description" content="Verified leads $40, booked appointments $75, live transfers $150. Select by state, county, or zip. No contracts.">
+  <meta property="og:url" content="https://roofroof.solutions/">
+  <meta property="og:site_name" content="RoofRoof Roofing Solutions">
+  <meta property="og:image" content="/images/logo.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="RoofRoof Roofing Solutions — Roofing Leads on Demand">
+  <meta name="twitter:description" content="Verified leads $40, booked appointments $75, live transfers $150. Select by state, county, or zip.">
+  <meta name="twitter:image" content="/images/logo.jpg">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "RoofRoof Roofing Solutions",
+    "url": "https://roofroof.solutions/",
+    "applicationCategory": "BusinessApplication",
+    "offers": [
+      { "@type": "Offer", "name": "Verified Lead", "price": "40.00", "priceCurrency": "USD" },
+      { "@type": "Offer", "name": "Booked Appointment", "price": "75.00", "priceCurrency": "USD" },
+      { "@type": "Offer", "name": "Live Transfer", "price": "150.00", "priceCurrency": "USD" }
+    ]
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #ffffff;
+      --bg-secondary: #f8fafc;
+      --bg-tertiary: #f1f5f9;
+      --text: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #94a3b8;
+      --accent: #c45a1c;
+      --accent-light: #fde8d8;
+      --accent-hover: #a84b17;
+      --border: #e2e8f0;
+      --border-dark: #cbd5e1;
+      --shadow: 0 1px 3px rgba(0,0,0,0.08);
+      --shadow-lg: 0 10px 40px rgba(0,0,0,0.08);
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+    /* Nav */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255,255,255,0.9);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    nav .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 64px;
+    }
+
+    .logo {
+      font-weight: 700;
+      font-size: 20px;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .logo span {
+      color: var(--accent);
+    }
+
+    .nav-right { display: flex; align-items: center; gap: 20px; }
+
+    .nav-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .nav-link:hover { color: var(--text); }
+
+    .cart-btn {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.15s;
+    }
+
+    .cart-btn:hover { border-color: var(--border-dark); background: var(--bg-secondary); }
+
+    .cart-count {
+      background: var(--accent);
+      color: white;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 10px;
+    }
+
+    /* Pages */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* Hero */
+    .hero {
+      padding: 80px 0 48px;
+      text-align: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--accent-light);
+      padding: 6px 14px;
+      border-radius: 50px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--accent);
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      font-size: clamp(36px, 5vw, 52px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+
+    .hero p {
+      font-size: 18px;
+      color: var(--text-secondary);
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    /* Products */
+    .products-section { padding: 48px 0 80px; }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 24px;
+    }
+
+    .section-title { font-size: 20px; font-weight: 600; }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    @media (max-width: 800px) { .products-grid { grid-template-columns: 1fr; } }
+
+    .product-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .product-card:hover {
+      border-color: var(--border-dark);
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+
+    .product-card.featured { border-color: var(--accent); }
+
+    .product-badge {
+      position: absolute;
+      top: -10px;
+      right: 16px;
+      background: var(--accent);
+      color: white;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 50px;
+    }
+
+    .product-card h3 { font-size: 17px; font-weight: 600; margin-bottom: 4px; }
+
+    .product-card .price {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+
+    .product-card .price span {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--text-secondary);
+    }
+
+    .product-card p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .product-card .cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 16px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--accent);
+    }
+
+    /* Product Page */
+    .product-page { padding: 32px 0 80px; }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 24px;
+    }
+
+    .back-link:hover { color: var(--text); }
+
+    .product-layout {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 48px;
+    }
+
+    @media (max-width: 900px) {
+      .product-layout { grid-template-columns: 1fr; }
+    }
+
+    .product-main h1 {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .product-main .price-big {
+      font-size: 40px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 16px;
+    }
+
+    .product-main .price-big span {
+      font-size: 16px;
+      color: var(--text-secondary);
+      font-weight: 400;
+    }
+
+    .product-main .desc {
+      font-size: 16px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 24px;
+    }
+
+    .specs-list { list-style: none; }
+
+    .specs-list li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 0;
+      font-size: 15px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .specs-list li:last-child { border-bottom: none; }
+
+    .specs-list .check {
+      width: 20px;
+      height: 20px;
+      background: var(--accent-light);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    /* Map Section */
+    .map-section {
+      margin-top: 32px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+    }
+
+    .map-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .map-header h3 { font-size: 16px; font-weight: 600; }
+
+    .map-breadcrumb {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .map-breadcrumb span { color: var(--accent); font-weight: 500; }
+
+    .map-back {
+      font-size: 13px;
+      color: var(--accent);
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .map-back:hover { text-decoration: underline; }
+
+    .map-container {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .map-container svg {
+      width: 100%;
+      height: 400px;
+      display: block;
+      background: #f8fafc;
+    }
+
+    .map-container svg path {
+      fill: #e2e8f0;
+      stroke: #ffffff;
+      stroke-width: 1.5;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .map-container svg path:hover {
+      fill: #fde8d8;
+    }
+
+    .map-container svg path.selected {
+      fill: #c45a1c;
+      stroke: #a84b17;
+      stroke-width: 2;
+    }
+
+    .map-tooltip {
+      position: absolute;
+      background: var(--text);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.15s;
+      white-space: nowrap;
+    }
+
+    .map-tooltip.show { opacity: 1; }
+
+    /* Order Card */
+    .order-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      position: sticky;
+      top: 80px;
+      box-shadow: var(--shadow);
+    }
+
+    .order-card h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .selected-regions-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+    }
+
+    .selected-regions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 20px;
+      min-height: 32px;
+    }
+
+    .selected-regions:empty::before {
+      content: 'Click map to select';
+      color: var(--text-muted);
+      font-size: 13px;
+      font-style: italic;
+    }
+
+    .region-count-note {
+      font-size: 12px;
+      color: #dc2626;
+      margin-top: -12px;
+      margin-bottom: 16px;
+    }
+
+    .region-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--accent-light);
+      color: var(--accent);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .region-tag button {
+      background: none;
+      border: none;
+      color: var(--accent);
+      cursor: pointer;
+      font-size: 14px;
+      line-height: 1;
+      opacity: 0.7;
+    }
+
+    .region-tag button:hover { opacity: 1; }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+
+    .form-group input {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 15px;
+      color: var(--text);
+      font-family: inherit;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .form-group textarea {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 14px;
+      color: var(--text);
+      font-family: inherit;
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .label-note {
+      font-weight: 400;
+      color: var(--text-muted);
+    }
+
+    .toggle-group {
+      display: flex;
+      gap: 6px;
+    }
+
+    .toggle-btn {
+      flex: 1;
+      padding: 8px 12px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .toggle-btn:hover {
+      border-color: var(--border-dark);
+    }
+
+    .toggle-btn.active {
+      background: var(--accent-light);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .order-summary {
+      border-top: 1px solid var(--border);
+      margin-top: 16px;
+      padding-top: 16px;
+    }
+
+    .order-line {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .order-line .label { color: var(--text-secondary); }
+
+    .order-total {
+      display: flex;
+      justify-content: space-between;
+      font-size: 18px;
+      font-weight: 600;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    .btn-add {
+      width: 100%;
+      background: var(--accent);
+      border: none;
+      padding: 14px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      color: white;
+      cursor: pointer;
+      margin-top: 16px;
+      transition: background 0.15s;
+      font-family: inherit;
+    }
+
+    .btn-add:hover { background: var(--accent-hover); }
+
+    .btn-add:disabled {
+      background: var(--border);
+      cursor: not-allowed;
+    }
+
+    /* Cart Drawer */
+    .cart-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.3);
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.2s;
+      z-index: 200;
+    }
+
+    .cart-overlay.open { opacity: 1; visibility: visible; }
+
+    .cart-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 400px;
+      max-width: 100%;
+      background: var(--bg);
+      border-left: 1px solid var(--border);
+      transform: translateX(100%);
+      transition: transform 0.25s ease-out;
+      z-index: 201;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .cart-overlay.open .cart-drawer { transform: translateX(0); }
+
+    .cart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cart-header h2 { font-size: 18px; font-weight: 600; }
+
+    .cart-close {
+      background: none;
+      border: none;
+      font-size: 24px;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+
+    .cart-items {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px 20px;
+    }
+
+    .cart-empty {
+      text-align: center;
+      padding: 48px 20px;
+      color: var(--text-muted);
+    }
+
+    .cart-item {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 10px;
+    }
+
+    .cart-item-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .cart-item h4 { font-size: 15px; font-weight: 600; }
+
+    .cart-item-remove {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    .cart-item-remove:hover { color: #dc2626; }
+
+    .cart-item-regions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-bottom: 12px;
+    }
+
+    .cart-item-regions span {
+      font-size: 12px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 2px 8px;
+      border-radius: 4px;
+      color: var(--text-secondary);
+    }
+
+    .cart-item-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .qty-control {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .qty-control button {
+      width: 28px;
+      height: 28px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .qty-control button:hover { background: var(--bg-tertiary); }
+
+    .cart-item-price { font-weight: 600; }
+
+    .cart-footer {
+      padding: 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .cart-total {
+      display: flex;
+      justify-content: space-between;
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .btn-checkout {
+      width: 100%;
+      background: var(--accent);
+      border: none;
+      padding: 14px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      color: white;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .btn-checkout:hover { background: var(--accent-hover); }
+
+    /* Features */
+    .features {
+      padding: 64px 0;
+      border-top: 1px solid var(--border);
+      background: var(--bg-secondary);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px;
+      text-align: center;
+    }
+
+    @media (max-width: 800px) { .features-grid { grid-template-columns: repeat(2, 1fr); } }
+
+    .feature h3 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+    .feature p { font-size: 13px; color: var(--text-secondary); }
+
+    /* Footer */
+    footer {
+      padding: 24px 0;
+      border-top: 1px solid var(--border);
+    }
+
+    footer .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    footer p { font-size: 13px; color: var(--text-muted); }
+
+    .footer-links { display: flex; gap: 20px; }
+    .footer-links a { font-size: 13px; color: var(--text-secondary); text-decoration: none; }
+    .footer-links a:hover { color: var(--text); }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--text);
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      transform: translateY(80px);
+      opacity: 0;
+      transition: all 0.25s;
+      z-index: 300;
+    }
+
+    .toast.show { transform: translateY(0); opacity: 1; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="container">
+      <a href="javascript:void(0)" class="logo" onclick="showPage('home')"><img src="/images/logo.jpg" alt="RoofRoof Roofing Solutions" style="height:40px;width:auto;"></a>
+      <div class="nav-right">
+        <a href="javascript:void(0)" class="nav-link" onclick="showPage('home'); setTimeout(function(){ document.querySelector('.products-section').scrollIntoView({behavior:'smooth', block:'start'}); }, 100);">Products</a>
+        <button class="cart-btn" onclick="openCart()">
+          Cart <span class="cart-count" id="cart-count">0</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Home -->
+  <div class="page active" id="page-home">
+    <section class="hero">
+      <div class="container">
+        <div class="hero-badge">Order by county</div>
+        <h1>Roofing leads on demand</h1>
+        <p>Select your counties on the map. Choose lead type. Add to cart. Leads delivered with call recordings.</p>
+      </div>
+    </section>
+
+    <section class="products-section">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Choose lead type</h2>
+        </div>
+        <div class="products-grid">
+          <div class="product-card" onclick="showPage('verified')">
+            <h3>Verified lead</h3>
+            <div class="price">$40<span> /lead</span></div>
+            <p>Phone-verified homeowner with confirmed roof issue. Includes call recording.</p>
+            <div class="cta">Select regions →</div>
+          </div>
+          <div class="product-card featured" onclick="showPage('appointment')">
+            <div class="product-badge">Popular</div>
+            <h3>Booked appointment</h3>
+            <div class="price">$75<span> /appt</span></div>
+            <p>Scheduled date & time with decision maker confirmed. Ready for your estimator.</p>
+            <div class="cta">Select regions →</div>
+          </div>
+          <div class="product-card" onclick="showPage('transfer')">
+            <h3>Live transfer</h3>
+            <div class="price">$150<span> /transfer</span></div>
+            <p>Warm handoff with qualified homeowner on the line. Highest close rate.</p>
+            <div class="cta">Select regions →</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="features">
+      <div class="container">
+        <div class="features-grid">
+          <div class="feature">
+            <h3>Call recording</h3>
+            <p>Hear how each lead was qualified</p>
+          </div>
+          <div class="feature">
+            <h3>Sheet delivery</h3>
+            <p>Leads drip into your Google Sheet</p>
+          </div>
+          <div class="feature">
+            <h3>No contracts</h3>
+            <p>Order what you need, cancel anytime</p>
+          </div>
+          <div class="feature">
+            <h3>Self-serve</h3>
+            <p>No sales calls required</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Product Pages -->
+  <div class="page" id="page-verified">
+    <div class="container product-page">
+      <a href="javascript:void(0)" class="back-link" onclick="showPage('home')">← Products</a>
+      <div class="product-layout">
+        <div class="product-main">
+          <h1>Verified lead</h1>
+          <div class="price-big">$40<span> /lead</span></div>
+          <p class="desc">Phone-verified homeowner with confirmed roof issue. Every lead includes the call recording so you hear how they were qualified.</p>
+          <ul class="specs-list">
+            <li><span class="check">✓</span> Name</li>
+            <li><span class="check">✓</span> Phone (verified live)</li>
+            <li><span class="check">✓</span> Property address</li>
+            <li><span class="check">✓</span> Homeowner confirmed</li>
+            <li><span class="check">✓</span> Roof issue (leak, storm, age)</li>
+            <li><span class="check">✓</span> Call recording</li>
+          </ul>
+          <div class="map-section">
+            <div class="map-header">
+              <h3>Select regions</h3>
+              <div id="verified-breadcrumb" class="map-breadcrumb">Click a state</div>
+            </div>
+            <div class="map-container">
+              <svg id="verified-map"></svg>
+              <div class="map-tooltip" id="verified-tooltip"></div>
+            </div>
+          </div>
+        </div>
+        <div class="order-card">
+          <h3>Your order</h3>
+          
+          <div class="form-group">
+            <label>Select by</label>
+            <div class="toggle-group">
+              <button class="toggle-btn active" onclick="setRegionType('verified', 'state')">State</button>
+              <button class="toggle-btn" onclick="setRegionType('verified', 'county')">County</button>
+              <button class="toggle-btn" onclick="setRegionType('verified', 'zip')">Zip code</button>
+            </div>
+          </div>
+
+          <div id="verified-zip-input" class="form-group" style="display:none;">
+            <label>Paste zip codes (one per line, min 10)</label>
+            <textarea id="verified-zips" placeholder="32801&#10;32802&#10;32803&#10;..." oninput="parseZips('verified')"></textarea>
+          </div>
+
+          <p class="selected-regions-label">Selected <span id="verified-region-type-label">states</span></p>
+          <div class="selected-regions" id="verified-selected"></div>
+          <p class="region-count-note" id="verified-min-note" style="display:none;">Minimum 10 required</p>
+          
+          <div class="form-group">
+            <label>Total leads</label>
+            <input type="number" id="verified-qty" value="10" min="10" oninput="updateTotal('verified')">
+          </div>
+          <div class="order-summary">
+            <div class="order-line">
+              <span class="label" id="verified-region-label">States</span>
+              <span id="verified-region-count">0</span>
+            </div>
+            <div class="order-line">
+              <span class="label">Total leads</span>
+              <span id="verified-qty-display">10</span>
+            </div>
+            <div class="order-line">
+              <span class="label">Price per lead</span>
+              <span>$40</span>
+            </div>
+            <div class="order-total">
+              <span>Total</span>
+              <span id="verified-total">$0</span>
+            </div>
+          </div>
+          <button class="btn-add" id="verified-btn" onclick="addToCart('verified')" disabled>Select regions to continue</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page" id="page-appointment">
+    <div class="container product-page">
+      <a href="javascript:void(0)" class="back-link" onclick="showPage('home')">← Products</a>
+      <div class="product-layout">
+        <div class="product-main">
+          <h1>Booked appointment</h1>
+          <div class="price-big">$75<span> /appt</span></div>
+          <p class="desc">Pre-scheduled appointment with a confirmed decision maker. Your estimator shows up, the homeowner expects them.</p>
+          <ul class="specs-list">
+            <li><span class="check">✓</span> Everything in Verified</li>
+            <li><span class="check">✓</span> Scheduled date & time</li>
+            <li><span class="check">✓</span> Decision maker confirmed</li>
+            <li><span class="check">✓</span> Roof type identified</li>
+            <li><span class="check">✓</span> Call recording</li>
+          </ul>
+          <div class="map-section">
+            <div class="map-header">
+              <h3>Select regions</h3>
+              <div id="appointment-breadcrumb" class="map-breadcrumb">Click a state</div>
+            </div>
+            <div class="map-container">
+              <svg id="appointment-map"></svg>
+              <div class="map-tooltip" id="appointment-tooltip"></div>
+            </div>
+          </div>
+        </div>
+        <div class="order-card">
+          <h3>Your order</h3>
+          
+          <div class="form-group">
+            <label>Select by</label>
+            <div class="toggle-group">
+              <button class="toggle-btn active" onclick="setRegionType('appointment', 'state')">State</button>
+              <button class="toggle-btn" onclick="setRegionType('appointment', 'county')">County</button>
+              <button class="toggle-btn" onclick="setRegionType('appointment', 'zip')">Zip code</button>
+            </div>
+          </div>
+
+          <div id="appointment-zip-input" class="form-group" style="display:none;">
+            <label>Paste zip codes (one per line, min 10)</label>
+            <textarea id="appointment-zips" placeholder="32801&#10;32802&#10;32803&#10;..." oninput="parseZips('appointment')"></textarea>
+          </div>
+
+          <p class="selected-regions-label">Selected <span id="appointment-region-type-label">states</span></p>
+          <div class="selected-regions" id="appointment-selected"></div>
+          <p class="region-count-note" id="appointment-min-note" style="display:none;">Minimum 10 required</p>
+          
+          <div class="form-group">
+            <label>Total appointments</label>
+            <input type="number" id="appointment-qty" value="10" min="10" oninput="updateTotal('appointment')">
+          </div>
+          <div class="order-summary">
+            <div class="order-line">
+              <span class="label" id="appointment-region-label">States</span>
+              <span id="appointment-region-count">0</span>
+            </div>
+            <div class="order-line">
+              <span class="label">Total appointments</span>
+              <span id="appointment-qty-display">10</span>
+            </div>
+            <div class="order-line">
+              <span class="label">Price per appt</span>
+              <span>$75</span>
+            </div>
+            <div class="order-total">
+              <span>Total</span>
+              <span id="appointment-total">$0</span>
+            </div>
+          </div>
+          <button class="btn-add" id="appointment-btn" onclick="addToCart('appointment')" disabled>Select regions to continue</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page" id="page-transfer">
+    <div class="container product-page">
+      <a href="javascript:void(0)" class="back-link" onclick="showPage('home')">← Products</a>
+      <div class="product-layout">
+        <div class="product-main">
+          <h1>Live transfer</h1>
+          <div class="price-big">$150<span> /transfer</span></div>
+          <p class="desc">Warm handoff with a qualified homeowner already on the line. You answer, we connect you live. Highest close rate.</p>
+          <ul class="specs-list">
+            <li><span class="check">✓</span> Everything in Booked</li>
+            <li><span class="check">✓</span> On the line, warm handoff</li>
+            <li><span class="check">✓</span> Available within 7 days</li>
+            <li><span class="check">✓</span> Call recording</li>
+          </ul>
+          <div class="map-section">
+            <div class="map-header">
+              <h3>Select regions</h3>
+              <div id="transfer-breadcrumb" class="map-breadcrumb">Click a state</div>
+            </div>
+            <div class="map-container">
+              <svg id="transfer-map"></svg>
+              <div class="map-tooltip" id="transfer-tooltip"></div>
+            </div>
+          </div>
+        </div>
+        <div class="order-card">
+          <h3>Your order</h3>
+          
+          <div class="form-group">
+            <label>Select by</label>
+            <div class="toggle-group">
+              <button class="toggle-btn active" onclick="setRegionType('transfer', 'state')">State</button>
+              <button class="toggle-btn" onclick="setRegionType('transfer', 'county')">County</button>
+              <button class="toggle-btn" onclick="setRegionType('transfer', 'zip')">Zip code</button>
+            </div>
+          </div>
+
+          <div id="transfer-zip-input" class="form-group" style="display:none;">
+            <label>Paste zip codes (one per line, min 10)</label>
+            <textarea id="transfer-zips" placeholder="32801&#10;32802&#10;32803&#10;..." oninput="parseZips('transfer')"></textarea>
+          </div>
+
+          <p class="selected-regions-label">Selected <span id="transfer-region-type-label">states</span></p>
+          <div class="selected-regions" id="transfer-selected"></div>
+          <p class="region-count-note" id="transfer-min-note" style="display:none;">Minimum 10 required</p>
+          
+          <div class="form-group">
+            <label>Total transfers</label>
+            <input type="number" id="transfer-qty" value="10" min="10" oninput="updateTotal('transfer')">
+          </div>
+          <div class="order-summary">
+            <div class="order-line">
+              <span class="label" id="transfer-region-label">States</span>
+              <span id="transfer-region-count">0</span>
+            </div>
+            <div class="order-line">
+              <span class="label">Total transfers</span>
+              <span id="transfer-qty-display">10</span>
+            </div>
+            <div class="order-line">
+              <span class="label">Price per transfer</span>
+              <span>$150</span>
+            </div>
+            <div class="order-total">
+              <span>Total</span>
+              <span id="transfer-total">$0</span>
+            </div>
+          </div>
+          <button class="btn-add" id="transfer-btn" onclick="addToCart('transfer')" disabled>Select regions to continue</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cart -->
+  <div class="cart-overlay" id="cart-overlay" onclick="closeCart()">
+    <div class="cart-drawer" onclick="event.stopPropagation()">
+      <div class="cart-header">
+        <h2>Cart</h2>
+        <button class="cart-close" onclick="closeCart()">×</button>
+      </div>
+      <div class="cart-items" id="cart-items">
+        <div class="cart-empty">Your cart is empty</div>
+      </div>
+      <div class="cart-footer">
+        <div class="cart-total">
+          <span>Total</span>
+          <span id="cart-total">$0</span>
+        </div>
+        <button class="btn-checkout">Checkout</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">Added to cart</div>
+
+  <footer>
+    <div class="container">
+      <p>© 2026 RoofRoof Roofing Solutions</p>
+      <div class="footer-links">
+        <a href="#">Terms</a>
+        <a href="#">Privacy</a>
+        <a href="#">Support</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const prices = { verified: 40, appointment: 75, transfer: 150 };
+    const names = { verified: 'Verified lead', appointment: 'Booked appointment', transfer: 'Live transfer' };
+    let cart = [];
+    let selectedRegions = { verified: [], appointment: [], transfer: [] };
+    let mapState = { verified: null, appointment: null, transfer: null };
+    let regionType = { verified: 'state', appointment: 'state', transfer: 'state' };
+
+    const usStatesUrl = 'https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json';
+    const usCountiesUrl = 'https://cdn.jsdelivr.net/npm/us-atlas@3/counties-10m.json';
+
+    let statesGeo, countiesGeo;
+    const stateFips = {"01":"Alabama","02":"Alaska","04":"Arizona","05":"Arkansas","06":"California","08":"Colorado","09":"Connecticut","10":"Delaware","11":"District of Columbia","12":"Florida","13":"Georgia","15":"Hawaii","16":"Idaho","17":"Illinois","18":"Indiana","19":"Iowa","20":"Kansas","21":"Kentucky","22":"Louisiana","23":"Maine","24":"Maryland","25":"Massachusetts","26":"Michigan","27":"Minnesota","28":"Mississippi","29":"Missouri","30":"Montana","31":"Nebraska","32":"Nevada","33":"New Hampshire","34":"New Jersey","35":"New Mexico","36":"New York","37":"North Carolina","38":"North Dakota","39":"Ohio","40":"Oklahoma","41":"Oregon","42":"Pennsylvania","44":"Rhode Island","45":"South Carolina","46":"South Dakota","47":"Tennessee","48":"Texas","49":"Utah","50":"Vermont","51":"Virginia","53":"Washington","54":"West Virginia","55":"Wisconsin","56":"Wyoming"};
+
+    // Load geo data
+    Promise.all([
+      d3.json(usStatesUrl),
+      d3.json(usCountiesUrl)
+    ]).then(([states, counties]) => {
+      statesGeo = topojson.feature(states, states.objects.states);
+      countiesGeo = topojson.feature(counties, counties.objects.counties);
+    });
+
+    function setRegionType(product, type) {
+      regionType[product] = type;
+      selectedRegions[product] = [];
+      renderSelected(product);
+      updateTotal(product);
+      
+      // Update toggle buttons
+      const card = document.getElementById(`${product}-btn`).closest('.order-card');
+      card.querySelectorAll('.toggle-btn').forEach((btn, i) => {
+        const types = ['state', 'county', 'zip'];
+        btn.classList.toggle('active', types[i] === type);
+      });
+      
+      // Update labels
+      const labels = { state: 'states', county: 'counties', zip: 'zip codes' };
+      document.getElementById(`${product}-region-type-label`).textContent = labels[type];
+      document.getElementById(`${product}-region-label`).textContent = labels[type].charAt(0).toUpperCase() + labels[type].slice(1);
+      
+      // Show/hide zip input and min note
+      document.getElementById(`${product}-zip-input`).style.display = type === 'zip' ? 'block' : 'none';
+      document.getElementById(`${product}-min-note`).style.display = (type === 'county' || type === 'zip') ? 'block' : 'none';
+      
+      // Reset and init map
+      if (type === 'state' || type === 'county') {
+        initMap(product);
+      }
+    }
+
+    function parseZips(product) {
+      const text = document.getElementById(`${product}-zips`).value;
+      const zips = text.split(/[\n,\s]+/).filter(z => /^\d{5}$/.test(z.trim()));
+      selectedRegions[product] = zips.map(z => ({ id: z, name: z, state: 'ZIP', type: 'zip' }));
+      renderSelected(product);
+      updateTotal(product);
+    }
+
+    function showPage(page) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById(`page-${page}`).classList.add('active');
+      window.scrollTo(0, 0);
+      if (page !== 'home') {
+        setTimeout(() => initMap(page), 50);
+      }
+    }
+
+    function initMap(product) {
+      const svg = d3.select(`#${product}-map`);
+      svg.selectAll('*').remove();
+      svg.attr('viewBox', '0 0 960 600').attr('id', `${product}-map`);
+      
+      mapState[product] = null;
+      const type = regionType[product];
+      
+      if (type === 'state') {
+        document.getElementById(`${product}-breadcrumb`).innerHTML = 'Click states to select';
+      } else {
+        document.getElementById(`${product}-breadcrumb`).innerHTML = 'Click a state to view counties';
+      }
+      
+      const projection = d3.geoAlbersUsa().scale(1280).translate([480, 300]);
+      const path = d3.geoPath().projection(projection);
+
+      svg.selectAll('path')
+        .data(statesGeo.features)
+        .enter()
+        .append('path')
+        .attr('d', path)
+        .attr('data-id', d => d.id)
+        .attr('data-name', d => stateFips[d.id] || '')
+        .attr('class', d => selectedRegions[product].find(r => r.id === d.id) ? 'selected' : '')
+        .on('click', function(event, d) {
+          const stateName = stateFips[d.id];
+          if (!stateName) return;
+          
+          if (type === 'state') {
+            toggleState(product, d.id, stateName);
+            d3.select(this).classed('selected', selectedRegions[product].find(r => r.id === d.id));
+          } else if (type === 'county') {
+            showCounties(product, d.id, stateName);
+          }
+        })
+        .on('mouseenter', function(event, d) {
+          showTooltip(product, stateFips[d.id] || '', event);
+        })
+        .on('mouseleave', () => hideTooltip(product));
+    }
+
+    function toggleState(product, id, name) {
+      const idx = selectedRegions[product].findIndex(r => r.id === id);
+      if (idx > -1) {
+        selectedRegions[product].splice(idx, 1);
+      } else {
+        selectedRegions[product].push({ id, name, state: name, type: 'state' });
+      }
+      renderSelected(product);
+      updateTotal(product);
+    }
+
+    function showCounties(product, stateId, stateName) {
+      const svg = d3.select(`#${product}-map`);
+      svg.selectAll('*').remove();
+      
+      mapState[product] = { id: stateId, name: stateName };
+      document.getElementById(`${product}-breadcrumb`).innerHTML = `<span class="map-back" onclick="initMap('${product}')">← US</span> / <span>${stateName}</span>`;
+
+      const stateCounties = countiesGeo.features.filter(f => f.id.slice(0, 2) === stateId);
+      
+      const projection = d3.geoAlbersUsa().scale(1280).translate([480, 300]);
+      const path = d3.geoPath().projection(projection);
+
+      // Calculate bounds for zoom
+      const bounds = path.bounds({ type: 'FeatureCollection', features: stateCounties });
+      const dx = bounds[1][0] - bounds[0][0];
+      const dy = bounds[1][1] - bounds[0][1];
+      const x = (bounds[0][0] + bounds[1][0]) / 2;
+      const y = (bounds[0][1] + bounds[1][1]) / 2;
+      const scale = Math.min(960 / dx, 600 / dy) * 0.85;
+      const translate = [960 / 2 - scale * x, 600 / 2 - scale * y];
+
+      const g = svg.append('g').attr('transform', `translate(${translate}) scale(${scale})`);
+
+      g.selectAll('path')
+        .data(stateCounties)
+        .enter()
+        .append('path')
+        .attr('d', path)
+        .attr('data-id', d => d.id)
+        .attr('data-name', d => d.properties.name)
+        .attr('class', d => selectedRegions[product].find(r => r.id === d.id) ? 'selected' : '')
+        .on('click', function(event, d) {
+          toggleCounty(product, d.id, d.properties.name, stateName);
+          d3.select(this).classed('selected', selectedRegions[product].find(r => r.id === d.id));
+        })
+        .on('mouseenter', function(event, d) {
+          showTooltip(product, d.properties.name + ' County', event);
+        })
+        .on('mouseleave', () => hideTooltip(product));
+    }
+
+    function toggleCounty(product, id, name, state) {
+      const idx = selectedRegions[product].findIndex(r => r.id === id);
+      if (idx > -1) {
+        selectedRegions[product].splice(idx, 1);
+      } else {
+        selectedRegions[product].push({ id, name, state, type: 'county' });
+      }
+      renderSelected(product);
+      updateTotal(product);
+    }
+
+    function removeRegion(product, id) {
+      selectedRegions[product] = selectedRegions[product].filter(r => r.id !== id);
+      renderSelected(product);
+      updateTotal(product);
+      
+      // Update map selection
+      d3.select(`#${product}-map`).selectAll('path').each(function() {
+        const el = d3.select(this);
+        if (el.attr('data-id') === id) {
+          el.classed('selected', false);
+        }
+      });
+    }
+
+    function renderSelected(product) {
+      const container = document.getElementById(`${product}-selected`);
+      container.innerHTML = selectedRegions[product].map(r => `
+        <div class="region-tag">
+          ${r.type === 'zip' ? r.name : (r.type === 'state' ? r.name : r.name + ', ' + r.state)}
+          <button onclick="removeRegion('${product}', '${r.id}')">×</button>
+        </div>
+      `).join('');
+    }
+
+    function updateTotal(product) {
+      const qty = parseInt(document.getElementById(`${product}-qty`).value) || 0;
+      const regions = selectedRegions[product].length;
+      const total = prices[product] * qty;
+      const type = regionType[product];
+      const minRegions = (type === 'county' || type === 'zip') ? 10 : 1;
+      
+      document.getElementById(`${product}-region-count`).textContent = regions;
+      document.getElementById(`${product}-qty-display`).textContent = qty;
+      document.getElementById(`${product}-total`).textContent = '$' + total.toLocaleString();
+      
+      // Update min note visibility and color
+      const minNote = document.getElementById(`${product}-min-note`);
+      if (type === 'county' || type === 'zip') {
+        minNote.style.display = 'block';
+        minNote.style.color = regions < 10 ? '#dc2626' : '#c45a1c';
+        minNote.textContent = regions < 10 ? `Minimum 10 required (${regions} selected)` : `${regions} selected ✓`;
+      } else {
+        minNote.style.display = 'none';
+      }
+      
+      const btn = document.getElementById(`${product}-btn`);
+      if (regions >= minRegions && qty >= 10) {
+        btn.disabled = false;
+        btn.textContent = `Add to cart — $${total.toLocaleString()}`;
+      } else if (regions < minRegions) {
+        btn.disabled = true;
+        if (type === 'state') {
+          btn.textContent = 'Select states to continue';
+        } else {
+          btn.textContent = `Select at least 10 ${type === 'county' ? 'counties' : 'zip codes'}`;
+        }
+      } else {
+        btn.disabled = true;
+        btn.textContent = 'Minimum 10 leads';
+      }
+    }
+
+    function showTooltip(product, text, event) {
+      const tooltip = document.getElementById(`${product}-tooltip`);
+      const rect = event.target.closest('.map-container').getBoundingClientRect();
+      tooltip.textContent = text;
+      tooltip.style.left = (event.clientX - rect.left + 10) + 'px';
+      tooltip.style.top = (event.clientY - rect.top - 30) + 'px';
+      tooltip.classList.add('show');
+    }
+
+    function hideTooltip(product) {
+      document.getElementById(`${product}-tooltip`).classList.remove('show');
+    }
+
+    function addToCart(product) {
+      const qty = parseInt(document.getElementById(`${product}-qty`).value) || 0;
+      const regions = [...selectedRegions[product]];
+      
+      if (regions.length === 0 || qty < 1) return;
+      
+      cart.push({
+        id: Date.now(),
+        product,
+        name: names[product],
+        price: prices[product],
+        qty,
+        regions
+      });
+      
+      // Reset selection
+      selectedRegions[product] = [];
+      renderSelected(product);
+      updateTotal(product);
+      if (mapState[product]) {
+        showCounties(product, mapState[product].id, mapState[product].name);
+      } else {
+        initMap(product);
+      }
+      
+      updateCartUI();
+      showToast();
+    }
+
+    function removeFromCart(id) {
+      cart = cart.filter(i => i.id !== id);
+      updateCartUI();
+    }
+
+    function updateCartQty(id, delta) {
+      const item = cart.find(i => i.id === id);
+      if (item) {
+        item.qty = Math.max(1, item.qty + delta);
+        updateCartUI();
+      }
+    }
+
+    function updateCartUI() {
+      const count = cart.reduce((sum, i) => sum + i.qty, 0);
+      document.getElementById('cart-count').textContent = count;
+      
+      const container = document.getElementById('cart-items');
+      if (cart.length === 0) {
+        container.innerHTML = '<div class="cart-empty">Your cart is empty</div>';
+      } else {
+        container.innerHTML = cart.map(item => `
+          <div class="cart-item">
+            <div class="cart-item-header">
+              <h4>${item.name}</h4>
+              <button class="cart-item-remove" onclick="removeFromCart(${item.id})">×</button>
+            </div>
+            <div class="cart-item-regions">
+              ${item.regions.slice(0, 5).map(r => `<span>${r.type === 'zip' ? r.name : (r.type === 'state' ? r.name : r.name)}</span>`).join('')}
+              ${item.regions.length > 5 ? `<span>+${item.regions.length - 5} more</span>` : ''}
+            </div>
+            <div class="cart-item-footer">
+              <div class="qty-control">
+                <button onclick="updateCartQty(${item.id}, -1)">−</button>
+                <span>${item.qty} leads</span>
+                <button onclick="updateCartQty(${item.id}, 1)">+</button>
+              </div>
+              <span class="cart-item-price">$${(item.price * item.qty).toLocaleString()}</span>
+            </div>
+          </div>
+        `).join('');
+      }
+      
+      const total = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+      document.getElementById('cart-total').textContent = '$' + total.toLocaleString();
+    }
+
+    function openCart() { document.getElementById('cart-overlay').classList.add('open'); }
+    function closeCart() { document.getElementById('cart-overlay').classList.remove('open'); }
+
+    function showToast() {
+      const toast = document.getElementById('toast');
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2000);
+    }
+
+    updateCartUI();
+  </script>
+
+</body>
+</html>
